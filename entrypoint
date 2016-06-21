@@ -1,0 +1,11 @@
+#! /bin/sh
+
+export STARTED=$(date +%s)
+export DATABASE=$(ping -c 1 $DB_HOST &> /dev/null && echo true || echo false)
+
+# Update any python requirements
+update-requirements
+$DATABASE && wait-for-db
+
+# Run the provided commands
+$@
