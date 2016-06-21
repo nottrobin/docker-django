@@ -1,17 +1,17 @@
-#! /bin/sh
+#! /bin/bash
 
 # Update requirements if changed since last update
 if [ -f requirements/dev.txt ]; then
   # Get modified times
   updated=$(date +'%s' -r $MODULES_DIR)
   volume_age=$(expr $STARTED - $updated)
-  modified=$(find requirements -exec date +'%s' -r {} \; | sort -n -r | head -1 || echo '0')
+  modified=$(find $REQUIREMENTS_CONTAINER -exec date +'%s' -r {} \; | sort -n -r | head -1 || echo '0')
 
   # Install requirements if volume just created, or if requirements have been modified
   if [[ ${volume_age} -lt 5 ]] || [[ ${modified} -gt ${updated} ]]; then
-    pip install -r requirements/dev.txt  # Install new dependencies
+    pip install -r $REQUIREMENTS_PATH  # Install new dependencies
     touch $MODULES_DIR  # Touch the directory to make sure it changes
   fi
 else
-  echo "Warning: No requirements fine found at /requirements/dev.txt. Not installing requirements."
+  echo "Warning: No requirements file found at $REQUIREMENTS_PATH. Not installing requirements." >> /dev/stderr
 fi
