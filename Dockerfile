@@ -9,7 +9,7 @@ ENV MODULES_DIR="/usr/local/lib/python2.7/site-packages" \
     DB_HOST="db" \
     DB_PORT="5432" \
     REQUIREMENTS_PATH="requirements/dev.txt" \
-    REQUIREMNETS_CONTAINER="requirements"
+    REQUIREMENTS_CONTAINER="requirements"
 VOLUME [$MODULES_DIR]
 
 ENTRYPOINT ["/entrypoint"]
