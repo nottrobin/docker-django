@@ -24,3 +24,7 @@ if [ -f requirements/dev.txt ]; then
 else
   echo "Warning: No requirements file found at $REQUIREMENTS_PATH. Not installing requirements." >> /dev/stderr
 fi
+
+if ! python -c "import django"; then
+  echo "Error: Django not found."
+fi
