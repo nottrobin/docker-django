@@ -60,7 +60,7 @@ A standard `docker-compose.yml` for the `django-app` image:
 # docker-compose.yml
 
 webapp:
-    image: ubuntudesign/django-app::v1.0.0
+    image: ubuntudesign/django-app::v1.0.2
     volumes:
       - "dependencies:/usr/local/lib/python2.7/site-packages"
       - .:/app
