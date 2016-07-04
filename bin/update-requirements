@@ -1,16 +1,25 @@
 #! /bin/bash
 
+function install_requirements {
+  echo "Notice: Re-installing python modules." >> /dev/stderr
+  pip install --requirement $REQUIREMENTS_PATH  # Install new dependencies
+  touch $MODULES_DIR  # Touch the directory to make sure it changes
+}
+
 # Update requirements if changed since last update
 if [ -f requirements/dev.txt ]; then
   # Get modified times
   updated=$(date +'%s' -r $MODULES_DIR)
-  volume_age=$(expr $STARTED - $updated)
   modified=$(find $REQUIREMENTS_CONTAINER -exec date +'%s' -r {} \; | sort -n -r | head -1 || echo '0')
+  install=false
 
-  # Install requirements if volume just created, or if requirements have been modified
-  if [[ ${volume_age} -lt 5 ]] || [[ ${modified} -gt ${updated} ]]; then
-    pip install -r $REQUIREMENTS_PATH  # Install new dependencies
-    touch $MODULES_DIR  # Touch the directory to make sure it changes
+  # Decide if we need to update requirements
+  if [[ ${modified} -gt ${updated} ]]; then
+    echo "Notice: New requirements found." >> /dev/stderr
+    install_requirements
+  elif ! python -c "import django"; then
+    echo "Notice: Django not found." >> /dev/stderr
+    install_requirements
   fi
 else
   echo "Warning: No requirements file found at $REQUIREMENTS_PATH. Not installing requirements." >> /dev/stderr
