@@ -1,6 +1,5 @@
 #! /bin/bash
 
-export STARTED=$(date +%s)
 export DATABASE=$(ping -c 1 $DB_HOST > /dev/null 2>&1 && echo true || echo false)
 
 # Update any python requirements
