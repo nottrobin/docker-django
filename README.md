@@ -60,7 +60,7 @@ A standard `docker-compose.yml` for the `django-app` image:
 # docker-compose.yml
 
 webapp:
-    image: ubuntudesign/django-app::v1.0.3
+    image: ubuntudesign/django-app::v1.0.4
     volumes:
       - "dependencies:/usr/local/lib/python2.7/site-packages"
       - .:/app
@@ -82,7 +82,7 @@ Here's an example of a `docker-compose.yml` with a PostgreSQL database:
 # docker-compose.yml
 
 webapp:
-  image: ubuntudesign/django-app:v1.0.3
+  image: ubuntudesign/django-app:v1.0.4
   volumes:
     - "dependencies:/usr/local/lib/python2.7/site-packages"
     - .:/app
