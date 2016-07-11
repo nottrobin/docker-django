@@ -1,17 +1,25 @@
 FROM python:2.7
 
-# Add binaries to image
-ADD bin /bin/
-ADD entrypoint /entrypoint
+# Expect to find application in /app
+WORKDIR /app
 
-# Persist the requirements data
-ENV MODULES_DIR="/usr/local/lib/python2.7/site-packages" \
-    DB_HOST="db" \
-    DB_PORT="5432" \
-    REQUIREMENTS_PATH="requirements/dev.txt" \
-    REQUIREMENTS_CONTAINER="requirements"
-VOLUME [$MODULES_DIR]
-
+# Expect to find the entrypoint script at /entrypoint
 ENTRYPOINT ["/entrypoint"]
 
-WORKDIR /app
+# Attempt to indicate debug mode to the Django app
+ENV DJANGO_DEBUG="true"
+
+# Default config for database service
+ENV DB_HOST="db" DB_PORT="5432"
+
+# Default config for where we expect to find requirements
+ENV REQUIREMENTS_PATH="requirements/dev.txt" REQUIREMENTS_CONTAINER="requirements"
+
+# Persist the requirements data
+ENV MODULES_DIR="/usr/local/lib/python2.7/site-packages"
+VOLUME [$MODULES_DIR] 
+
+# Add binaries to image
+ADD entrypoint /entrypoint
+ADD bin /bin/
+
