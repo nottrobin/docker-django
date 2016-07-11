@@ -8,6 +8,7 @@ ENTRYPOINT ["/entrypoint"]
 
 # Attempt to indicate debug mode to the Django app
 ENV DJANGO_DEBUG="true"
+ENV SECRET_KEY="no_secret"
 
 # Default config for database service
 ENV DB_HOST="db" DB_PORT="5432"
