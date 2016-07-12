@@ -1,18 +1,26 @@
 #! /bin/bash
 
+set -e
+
 export DATABASE=$(ping -c 1 $DB_HOST > /dev/null 2>&1 && echo true || echo false)
+run_command=$@
 
 # Update any python requirements
 update-requirements
-$DATABASE && DATABASE=$(check-db-connection)
 
-arguments=$@
+# Wait for database to come up
+if $DATABASE; then
+    DATABASE=$(check-db-connection)
+fi
 
-if [ -n "$arguments" ]; then
-  # If we have arguments, pass them to manage.py
-  python manage.py $arguments
+# Run manage.py commands
+if [ -n "$run_command" ]; then
+    # If we have arguments, pass them to manage.py
+    python manage.py $run_command
 else
-  # By default, prepare database and run server
-  $DATABASE && python manage.py migrate --noinput
-  python manage.py runserver 0.0.0.0:5000
+    # By default, prepare database and run server
+    if $DATABASE; then
+        python manage.py migrate --noinput
+    fi
+    python manage.py runserver 0.0.0.0:5000
 fi
