@@ -6,9 +6,6 @@ WORKDIR /app
 # Expect to find the entrypoint script at /entrypoint
 ENTRYPOINT ["/entrypoint"]
 
-# Attempt to indicate debug mode to the Django app
-ENV DJANGO_DEBUG="true"
-
 # Default config for database service
 ENV DB_HOST="db" DB_PORT="5432"
 
