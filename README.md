@@ -11,17 +11,17 @@ This image is meant for running Django projects which:
 
 ## Usage
 
-By default, the image will install any requirements from `/app/requirements/dev.txt` then run the standard Django development server from `/app` on port `5000` inside the container.
+By default, the image will install any requirements from `/app/requirements/dev.txt` then run the standard Django development server from `/app` on the `$PORT` port (default `8000`) inside the container.
 
 ### Basic usage
 
 For the most basic usage, run the following from your application directory:
 
 ``` bash
-$ docker run -ti --volume `pwd`:/app --publish 8000:5000 ubuntudesign/django-app
+$ docker run -ti --volume `pwd`:/app --publish 8000:8000 ubuntudesign/django-app
 ```
 
-This will mount your application directory at `/app` inside the container, install requirements from `/app/requirements/dev.txt`, run the Django development server on port `5000` with `manage.py runserver 5000` and link that port in the container to port `8000` on the host machine.
+This will mount your application directory at `/app` inside the container, install requirements from `/app/requirements/dev.txt`, run the Django development server with `manage.py runserver 0.0.0.0:8000` and link that port in the container to port `8000` on the host machine.
 
 All being well, your application should now be available at <localhost:8000>.
 
@@ -43,7 +43,7 @@ The above command works but will install requirements from scratch every time it
 $ docker run -ti \
          --volume `pwd`:/app \
          --volume dependencies:/usr/local/lib/python2.7/site-packages \
-         --publish 8000:5000 \
+         --publish 8000:8000 \
          ubuntudesign/django-app
 ```
 
@@ -65,7 +65,7 @@ webapp:
       - "dependencies:/usr/local/lib/python2.7/site-packages"
       - .:/app
     ports:
-      - "8000:5000"
+      - "8000:8000"
 ```
 
 ### Adding a database
@@ -87,7 +87,7 @@ webapp:
     - "dependencies:/usr/local/lib/python2.7/site-packages"
     - .:/app
   ports:
-    - "8000:5000"
+    - "8000:8000"
   links:
     - db
 
@@ -113,6 +113,6 @@ docker run -ti \
        --env DB_HOST=postgres_db \
        --volume `pwd`:/app \
        --volume dependencies:/usr/local/lib/python2.7/site-packages \
-       --publish 8000:5000 \
+       --publish 8000:8000 \
        ubuntudesign/django-app
 ```

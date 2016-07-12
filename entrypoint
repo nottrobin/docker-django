@@ -2,6 +2,12 @@
 
 set -e
 
+# If no default port is set for this project, set it to 8000
+if [ ! -n "$PORT" ]; then
+  echo "Warning: No port specified. Using 8000."
+  PORT=8000
+fi
+
 export DATABASE=$(ping -c 1 $DB_HOST > /dev/null 2>&1 && echo true || echo false)
 run_command=$@
 
@@ -22,5 +28,6 @@ else
     if $DATABASE; then
         python manage.py migrate --noinput
     fi
-    python manage.py runserver 0.0.0.0:5000
+    python manage.py runserver 0.0.0.0:${PORT}
 fi
+
