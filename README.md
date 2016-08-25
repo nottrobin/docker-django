@@ -60,7 +60,7 @@ A standard `docker-compose.yml` for the `django-app` image:
 # docker-compose.yml
 
 webapp:
-    image: ubuntudesign/django-app::v1.0.6
+    image: ubuntudesign/django-app::v1.0.8
     volumes:
       - "dependencies:/usr/local/lib/python2.7/site-packages"
       - .:/app
@@ -82,7 +82,7 @@ Here's an example of a `docker-compose.yml` with a PostgreSQL database:
 # docker-compose.yml
 
 webapp:
-  image: ubuntudesign/django-app:v1.0.6
+  image: ubuntudesign/django-app:v1.0.8
   volumes:
     - "dependencies:/usr/local/lib/python2.7/site-packages"
     - .:/app
@@ -100,16 +100,14 @@ db:
 The container can be customised by overriding any of the following environment variables:
 
 - `REQUIREMENTS_PATH`: The path to the requirements file from which to install dependencies (default: `requirements.txt`)
-- `REQUIREMENTS_CONTAINER`: A path to a file or directory containing requirements - only rebuild dependencies if this location has been updated (default: `requirements`)
 - `DB_HOST`: The hostname on which to look for a database connection (default: `db`)
 - `DB_PORT`: The port on which to look for a database connection (default: `5432`)
 
-E.g., to run a Django app with a requirements file at `requirements.txt`, and connect to a database called `postgres_db`:
+E.g., to run a Django app with a requirements file at `dev-requirements.txt`, and connect to a database called `postgres_db`:
 
 ``` bash
 docker run -ti \
-       --env REQUIREMENTS_PATH=requiremnts.txt \
-       --env REQUIREMENTS_CONTAINER=requirements.txt \
+       --env REQUIREMENTS_PATH=dev-requiremnts.txt \
        --env DB_HOST=postgres_db \
        --volume `pwd`:/app \
        --volume dependencies:/usr/local/lib/python2.7/site-packages \

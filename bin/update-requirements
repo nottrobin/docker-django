@@ -10,7 +10,7 @@ function install_requirements {
 if [ -f requirements.txt ]; then
   # Get modified times
   updated=$(date +'%s' -r $MODULES_DIR)
-  modified=$(find $REQUIREMENTS_CONTAINER -exec date +'%s' -r {} \; | sort -n -r | head -1 || echo '0')
+  modified=$(date +'%s' -r $REQUIREMENTS_PATH)
   install=false
 
   # Decide if we need to update requirements
