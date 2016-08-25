@@ -9,6 +9,9 @@ ENTRYPOINT ["/entrypoint"]
 # Default config for database service
 ENV DB_HOST="db" DB_PORT="5432"
 
+# Debug tools
+RUN pip install ipdb
+
 # Default config for where we expect to find requirements
 ENV REQUIREMENTS_PATH="requirements/dev.txt" REQUIREMENTS_CONTAINER="requirements"
 
