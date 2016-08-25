@@ -13,7 +13,7 @@ ENV DB_HOST="db" DB_PORT="5432"
 RUN pip install ipdb
 
 # Default config for where we expect to find requirements
-ENV REQUIREMENTS_PATH="requirements/dev.txt" REQUIREMENTS_CONTAINER="requirements"
+ENV REQUIREMENTS_PATH="requirements.txt" REQUIREMENTS_CONTAINER="requirements"
 
 # Persist the requirements data
 ENV MODULES_DIR="/usr/local/lib/python2.7/site-packages"

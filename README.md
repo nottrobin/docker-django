@@ -6,12 +6,12 @@ A docker image for running Django projects in local development, where they corr
 
 This image is meant for running Django projects which:
 
-- Define all required dependencies in `./requirements/dev.txt`
+- Define all required dependencies in `./requirements.txt`
 - Are compatible with Python 2 (python 3 support on its way)
 
 ## Usage
 
-By default, the image will install any requirements from `/app/requirements/dev.txt` then run the standard Django development server from `/app` on the `$PORT` port (default `8000`) inside the container.
+By default, the image will install any requirements from `/app/requirements.txt` then run the standard Django development server from `/app` on the `$PORT` port (default `8000`) inside the container.
 
 ### Basic usage
 
@@ -21,7 +21,7 @@ For the most basic usage, run the following from your application directory:
 $ docker run -ti --volume `pwd`:/app --publish 8000:8000 ubuntudesign/django-app
 ```
 
-This will mount your application directory at `/app` inside the container, install requirements from `/app/requirements/dev.txt`, run the Django development server with `manage.py runserver 0.0.0.0:8000` and link that port in the container to port `8000` on the host machine.
+This will mount your application directory at `/app` inside the container, install requirements from `/app/requirements.txt`, run the Django development server with `manage.py runserver 0.0.0.0:8000` and link that port in the container to port `8000` on the host machine.
 
 All being well, your application should now be available at <localhost:8000>.
 
@@ -99,7 +99,7 @@ db:
 
 The container can be customised by overriding any of the following environment variables:
 
-- `REQUIREMENTS_PATH`: The path to the requirements file from which to install dependencies (default: `requirements/dev.txt`)
+- `REQUIREMENTS_PATH`: The path to the requirements file from which to install dependencies (default: `requirements.txt`)
 - `REQUIREMENTS_CONTAINER`: A path to a file or directory containing requirements - only rebuild dependencies if this location has been updated (default: `requirements`)
 - `DB_HOST`: The hostname on which to look for a database connection (default: `db`)
 - `DB_PORT`: The port on which to look for a database connection (default: `5432`)
