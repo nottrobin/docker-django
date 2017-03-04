@@ -3,8 +3,7 @@
 set -e
 
 # If no default port is set for this project, set it to 8000
-if [ ! -n "$PORT" ]; then
-  echo "Warning: No port specified. Using 8000."
+if [ -z "$PORT" ]; then
   PORT=8000
 fi
 
@@ -12,11 +11,37 @@ export DATABASE=$(ping -c 1 $DB_HOST > /dev/null 2>&1 && echo true || echo false
 run_command=$@
 
 # Update any python requirements
-update-requirements
+if [ -f $REQUIREMENTS_PATH ]; then
+    if [[ ! -f "${REQUIREMENTS_HASH}" ]] || [[ "$(cat ${REQUIREMENTS_HASH})" != $(md5sum $REQUIREMENTS_PATH) ]]; then
+        echo "Installing python modules." >> /dev/stderr
+        pip install --requirement $REQUIREMENTS_PATH  # Install new dependencies
+        md5sum $REQUIREMENTS_PATH > $REQUIREMENTS_HASH
+    fi
+else
+    echo "$REQUIREMENTS_PATH not found - not installing requirements" >> /dev/stderr
+fi
+
+# Check for Django
+if ! python -c "import django"; then
+    echo "Error: Django not found." >> /dev/stderr
+    exit 1
+fi
 
 # Wait for database to come up
 if $DATABASE; then
-    DATABASE=$(check-db-connection)
+  limit=5
+  count=0
+
+  until timeout 1 bash -c "cat < /dev/null > /dev/tcp/$DB_HOST/$DB_PORT"; do
+    if [[ $count -lt $limit ]]; then
+      echo "Warning: Connection to database '$DB_HOST' on port '$DB_PORT' failed, waiting 3 seconds..." >> /dev/stderr
+      sleep 3
+      count=$((count+1))
+    else
+      echo "Warning: Failed to connect to database 5 times, giving up." >> /dev/stderr
+      DATABASE=false
+    fi
+  done
 fi
 
 # Run manage.py commands
@@ -30,4 +55,3 @@ else
     fi
     python manage.py runserver 0.0.0.0:${PORT}
 fi
-

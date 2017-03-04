@@ -18,10 +18,10 @@ By default, the image will install any requirements from `/app/requirements.txt`
 For the most basic usage, run the following from your application directory:
 
 ``` bash
-$ docker run -ti --volume `pwd`:/app --publish 8000:8000 ubuntudesign/django-app
+$ docker run -ti --volume `pwd`:`pwd` --workdir `pwd` --publish 8000:8000 ubuntudesign/django-app
 ```
 
-This will mount your application directory at `/app` inside the container, install requirements from `/app/requirements.txt`, run the Django development server with `manage.py runserver 0.0.0.0:8000` and link that port in the container to port `8000` on the host machine.
+This will mount your application directory inside the container, install requirements from `/app/requirements.txt`, run the Django development server with `manage.py runserver 0.0.0.0:8000` and link that port in the container to port `8000` on the host machine.
 
 All being well, your application should now be available at <localhost:8000>.
 
