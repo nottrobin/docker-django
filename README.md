@@ -18,10 +18,10 @@ By default, the image will install any requirements from `/app/requirements.txt`
 For the most basic usage, run the following from your application directory:
 
 ``` bash
-$ docker run -ti --volume `pwd`:/app --publish 8000:8000 ubuntudesign/django-app
+$ docker run -ti --volume `pwd`:`pwd` --workdir `pwd` --publish 8000:8000 ubuntudesign/django-app
 ```
 
-This will mount your application directory at `/app` inside the container, install requirements from `/app/requirements.txt`, run the Django development server with `manage.py runserver 0.0.0.0:8000` and link that port in the container to port `8000` on the host machine.
+This will mount your application directory inside the container, install requirements from `/app/requirements.txt`, run the Django development server with `manage.py runserver 0.0.0.0:8000` and link that port in the container to port `8000` on the host machine.
 
 All being well, your application should now be available at <localhost:8000>.
 
@@ -30,7 +30,7 @@ All being well, your application should now be available at <localhost:8000>.
 Any arguments after the `ubuntudesign/django-app` will be passed to `manage.py`. So, for example, adding `shell` will run a Django shell:
 
 ``` bash
-$ docker run -ti --volume `pwd`:/app ubuntudesign/django-app shell
+$ docker run -ti --volume `pwd`:`pwd` --workdir `pwd` ubuntudesign/django-app shell
 ```
 
 Or passing `help` will display the help for `manage.py`.
@@ -41,9 +41,10 @@ The above command works but will install requirements from scratch every time it
 
 ``` bash
 $ docker run -ti \
-         --volume `pwd`:/app \
-         --volume dependencies:/usr/local/lib/python2.7/site-packages \
-         --publish 8000:8000 \
+         --volume `pwd`:`pwd`  \
+         --workdir `pwd`  \
+         --volume dependencies:/usr/local/lib/python2.7/site-packages  \
+         --publish 8000:8000  \
          ubuntudesign/django-app
 ```
 
@@ -64,6 +65,7 @@ webapp:
     volumes:
       - "dependencies:/usr/local/lib/python2.7/site-packages"
       - .:/app
+    working_dir: /app
     ports:
       - "8000:8000"
 ```
@@ -86,6 +88,7 @@ webapp:
   volumes:
     - "dependencies:/usr/local/lib/python2.7/site-packages"
     - .:/app
+  working_dir: /app
   ports:
     - "8000:8000"
   links:
@@ -106,11 +109,12 @@ The container can be customised by overriding any of the following environment v
 E.g., to run a Django app with a requirements file at `dev-requirements.txt`, and connect to a database called `postgres_db`:
 
 ``` bash
-docker run -ti \
-       --env REQUIREMENTS_PATH=dev-requiremnts.txt \
-       --env DB_HOST=postgres_db \
-       --volume `pwd`:/app \
-       --volume dependencies:/usr/local/lib/python2.7/site-packages \
-       --publish 8000:8000 \
+docker run -ti  \
+       --env REQUIREMENTS_PATH=dev-requiremnts.txt  \
+       --env DB_HOST=postgres_db  \
+       --volume `pwd`:`pwd`  \
+       --workdir `pwd`  \
+       --volume dependencies:/usr/local/lib/python2.7/site-packages  \
+       --publish 8000:8000  \
        ubuntudesign/django-app
 ```
