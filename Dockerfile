@@ -17,5 +17,12 @@ ENV REQUIREMENTS_HASH="/usr/local/lib/python2.7/site-packages/requirements.md5"
 # Ensure all users can create dependencies
 RUN chmod -R 777 /usr/local/lib/python2.7/site-packages/ /usr/local/bin/
 
+# Create a shared home directory
+# This helps anonymous users have a home
+ENV HOME=/home/shared
+RUN mkdir -p $HOME
+RUN chmod -R 777 $HOME
+
 # Add binaries to image
 ADD entrypoint /entrypoint
+
