@@ -1,13 +1,12 @@
 #! /bin/bash
 
-set -e
+set -euo pipefail
 
 # If no default port is set for this project, set it to 8000
-if [ -z "$PORT" ]; then
+if [ -z "${PORT:-}" ]; then
   PORT=8000
 fi
 
-export DATABASE=$(ping -c 1 $DB_HOST > /dev/null 2>&1 && echo true || echo false)
 run_command=$@
 
 # Update any python requirements
@@ -28,20 +27,17 @@ if ! python -c "import django"; then
 fi
 
 # Wait for database to come up
-if $DATABASE; then
-  limit=5
-  count=0
+echo "execfile('/db-check')" | ./manage.py shell -i bpython 2> /tmp/dberror || db_error=$?
 
-  until timeout 1 bash -c "cat < /dev/null > /dev/tcp/$DB_HOST/$DB_PORT"; do
-    if [[ $count -lt $limit ]]; then
-      echo "Warning: Connection to database '$DB_HOST' on port '$DB_PORT' failed, waiting 3 seconds..." >> /dev/stderr
-      sleep 3
-      count=$((count+1))
+DATABASE=true
+
+if [ -n "${db_error:-}" ]; then
+    if [ $db_error -eq 9 ]; then
+        DATABASE=false
     else
-      echo "Warning: Failed to connect to database 5 times, giving up." >> /dev/stderr
-      DATABASE=false
+        cat /tmp/dberror
+        exit 1
     fi
-  done
 fi
 
 # Run manage.py commands
@@ -55,3 +51,4 @@ else
     fi
     python manage.py runserver 0.0.0.0:${PORT}
 fi
+
