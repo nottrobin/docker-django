@@ -1,0 +1,50 @@
+#! /usr/bin/env python
+
+# Core modules
+import sys
+import time
+
+# Third party modules
+from django.conf import settings
+from django.db import connections
+from django.db.utils import OperationalError
+
+
+if (
+    hasattr(settings, 'DATABASES') and
+    'default' in settings.DATABASES and
+    'default' in connections
+):
+    host = settings.DATABASES['default']['HOST']
+    port = settings.DATABASES['default']['PORT']
+
+    print('Database configured')
+
+    default_connection = connections['default']
+    time_spent = 0
+    connected = False
+
+    while True:
+        try:
+            print(
+                (
+                    '- Trying to connect to {host}:{port} '
+                    'after {time_spent} seconds'
+                ).format(**locals())
+            )
+            default_connection.cursor()
+
+            print('- Database available - continuing')
+        except OperationalError:
+            if time_spent < 5:
+                time.sleep(1)
+                time_spent += 1
+            else:
+                print('- Failed to connect - giving up')
+                sys.exit(9)
+
+
+else:
+    print('Database not configured - skipping')
+    sys.exit(9)
+

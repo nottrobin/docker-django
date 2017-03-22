@@ -25,4 +25,5 @@ RUN chmod -R 777 $HOME
 
 # Add binaries to image
 ADD entrypoint /entrypoint
+ADD db-check   /db-check
 
