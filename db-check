@@ -37,13 +37,8 @@ if (
             print('- Database available - continuing')
             sys.exit(0)
         except OperationalError:
-            if time_spent < 20:
-                time.sleep(1)
-                time_spent += 1
-            else:
-                print('- Failed to connect - giving up')
-                sys.exit(9)
-
+            time.sleep(1)
+            time_spent += 1
 
 else:
     print('Database not configured - skipping')
