@@ -37,7 +37,7 @@ if (
             print('- Database available - continuing')
             sys.exit(0)
         except OperationalError:
-            if time_spent < 5:
+            if time_spent < 20:
                 time.sleep(1)
                 time_spent += 1
             else:
