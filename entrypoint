@@ -26,19 +26,7 @@ if ! python -c "import django"; then
     exit 1
 fi
 
-# Wait for database to come up
-echo "execfile('/db-check')" | ./manage.py shell -i bpython 2> /tmp/dberror || db_error=$?
 
-DATABASE=true
-
-if [ -n "${db_error:-}" ]; then
-    if [ $db_error -eq 9 ]; then
-        DATABASE=false
-    else
-        cat /tmp/dberror
-        exit 1
-    fi
-fi
 
 # Run manage.py commands
 if [ -n "$run_command" ]; then
@@ -46,9 +34,14 @@ if [ -n "$run_command" ]; then
     python manage.py $run_command
 else
     # By default, prepare database and run server
-    if $DATABASE; then
+    if echo "execfile('/db-check')" | ./manage.py shell -i bpython 2> /tmp/dberror; then
+        # Wait for database to come up before running migrate
         python manage.py migrate --noinput
+    else
+        # If we encountered an unrecognised error, print it and exit
+        if [ $? -ne 9 ]; then cat /tmp/dberror && exit 1; fi
     fi
+
     python manage.py runserver 0.0.0.0:${PORT}
 fi
 
