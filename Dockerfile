@@ -1,4 +1,4 @@
-FROM python:2.7
+FROM python:3-alpine
 
 # Expect to find the entrypoint script at /entrypoint
 ENTRYPOINT ["/entrypoint"]
@@ -8,14 +8,15 @@ ENV DB_HOST="db"
 ENV DB_PORT="5432"
 
 # Debug tools
-RUN pip install ipdb
+RUN apk add --no-cache build-base linux-headers libffi-dev libffi-dev openssl-dev postgresql-dev libxml2-dev libxslt-dev python3-dev
+RUN pip3 install ipdb
 
 # Default config for where we expect to find requirements
 ENV REQUIREMENTS_PATH="requirements.txt"
-ENV REQUIREMENTS_HASH="/usr/local/lib/python2.7/site-packages/requirements.md5"
+ENV REQUIREMENTS_HASH="/usr/local/lib/python3.6/site-packages/requirements.md5"
 
 # Ensure all users can create dependencies
-RUN chmod -R 777 /usr/local/lib/python2.7/site-packages/ /usr/local/bin/ /usr/local/share/
+RUN chmod -R 777 /usr/local/lib/python3.6/site-packages/ /usr/local/bin/ /usr/local/share/
 
 # Create a shared home directory
 # This helps anonymous users have a home
@@ -26,4 +27,3 @@ RUN chmod -R 777 $HOME
 # Add binaries to image
 ADD entrypoint /entrypoint
 ADD db-check   /db-check
-
