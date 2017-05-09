@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/sh
 
 set -euo pipefail
 
@@ -11,9 +11,9 @@ run_command=$@
 
 # Update any python requirements
 if [ -f $REQUIREMENTS_PATH ]; then
-    if [[ ! -f "${REQUIREMENTS_HASH}" ]] || [[ "$(cat ${REQUIREMENTS_HASH})" != $(md5sum $REQUIREMENTS_PATH) ]]; then
+    if [ ! -f "${REQUIREMENTS_HASH}" ] || [ "$(cat ${REQUIREMENTS_HASH})" != "$(md5sum $REQUIREMENTS_PATH)" ]; then
         echo "Installing python modules." >> /dev/stderr
-        pip install --requirement $REQUIREMENTS_PATH  # Install new dependencies
+        pip3 install --requirement $REQUIREMENTS_PATH  # Install new dependencies
         md5sum $REQUIREMENTS_PATH > $REQUIREMENTS_HASH
     fi
 else
@@ -21,7 +21,7 @@ else
 fi
 
 # Check for Django
-if ! python -c "import django"; then
+if ! python3 -c "import django"; then
     echo "Error: Django not found." >> /dev/stderr
     exit 1
 fi
@@ -31,17 +31,16 @@ fi
 # Run manage.py commands
 if [ -n "$run_command" ]; then
     # If we have arguments, pass them to manage.py
-    python manage.py $run_command
+    python3 manage.py $run_command
 else
     # By default, prepare database and run server
-    if echo "execfile('/db-check')" | ./manage.py shell -i bpython 2> /tmp/dberror; then
+    if echo "exec(open('/db-check').read())" | python3 manage.py shell -i bpython 2> /tmp/dberror; then
         # Wait for database to come up before running migrate
-        python manage.py migrate --noinput
+        python3 manage.py migrate --noinput
     else
         # If we encountered an unrecognised error, print it and exit
         if [ $? -ne 9 ]; then cat /tmp/dberror && exit 1; fi
     fi
 
-    python manage.py runserver 0.0.0.0:${PORT}
+    python3 manage.py runserver 0.0.0.0:${PORT}
 fi
-

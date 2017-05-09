@@ -7,7 +7,7 @@ A docker image for running Django projects in local development, where they corr
 This image is meant for running Django projects which:
 
 - Define all required dependencies in `./requirements.txt`
-- Are compatible with Python 2 (python 3 support on its way)
+- Are compatible with Python 3
 
 ## Usage
 
@@ -43,7 +43,7 @@ The above command works but will install requirements from scratch every time it
 $ docker run -ti \
          --volume `pwd`:`pwd`  \
          --workdir `pwd`  \
-         --volume dependencies:/usr/local/lib/python2.7/site-packages  \
+         --volume dependencies:/usr/local/lib/python3.6/site-packages  \
          --publish 8000:8000  \
          ubuntudesign/django-app
 ```
@@ -63,7 +63,7 @@ A standard `docker-compose.yml` for the `django-app` image:
 webapp:
     image: ubuntudesign/django-app::v1.0.8
     volumes:
-      - "dependencies:/usr/local/lib/python2.7/site-packages"
+      - "dependencies:/usr/local/lib/python3.6/site-packages"
       - .:/app
     working_dir: /app
     ports:
@@ -86,7 +86,7 @@ Here's an example of a `docker-compose.yml` with a PostgreSQL database:
 webapp:
   image: ubuntudesign/django-app:v1.0.8
   volumes:
-    - "dependencies:/usr/local/lib/python2.7/site-packages"
+    - "dependencies:/usr/local/lib/python3.6/site-packages"
     - .:/app
   working_dir: /app
   ports:
@@ -114,7 +114,8 @@ docker run -ti  \
        --env DB_HOST=postgres_db  \
        --volume `pwd`:`pwd`  \
        --workdir `pwd`  \
-       --volume dependencies:/usr/local/lib/python2.7/site-packages  \
+       --volume dependencies:/usr/local/lib/python3.6/site-packages  \
        --publish 8000:8000  \
        ubuntudesign/django-app
 ```
+
