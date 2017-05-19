@@ -1,4 +1,4 @@
-FROM python:3-alpine
+FROM python:3-slim
 
 # Expect to find the entrypoint script at /entrypoint
 ENTRYPOINT ["/entrypoint"]
@@ -8,7 +8,6 @@ ENV DB_HOST="db"
 ENV DB_PORT="5432"
 
 # Debug tools
-RUN apk add --no-cache build-base linux-headers libffi-dev libffi-dev openssl-dev postgresql-dev libxml2-dev libxslt-dev python3-dev
 RUN pip3 install ipdb
 
 # Default config for where we expect to find requirements
