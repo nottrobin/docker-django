@@ -10,6 +10,9 @@ ENV DB_PORT="5432"
 # Debug tools
 RUN pip3 install ipdb
 
+# Supporting libraries for python modules
+RUN apt-get update && apt-get install --yes libpq-dev build-essential
+
 # Default config for where we expect to find requirements
 ENV REQUIREMENTS_PATH="requirements.txt"
 ENV REQUIREMENTS_HASH="/usr/local/lib/python3.6/site-packages/requirements.md5"
