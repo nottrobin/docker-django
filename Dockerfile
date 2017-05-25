@@ -11,7 +11,7 @@ ENV DB_PORT="5432"
 RUN pip3 install ipdb bpython flake8
 
 # Supporting libraries for python modules
-RUN apt-get update && apt-get install --yes libpq-dev build-essential
+RUN apt-get update && apt-get install --yes libpq-dev libjpeg-dev zlib1g-dev libpng12-dev libmagickwand-dev python-dev python-swiftclient build-essential libjpeg-progs optipng
 
 # Default config for where we expect to find requirements
 ENV REQUIREMENTS_PATH="requirements.txt"
