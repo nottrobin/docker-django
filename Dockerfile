@@ -23,7 +23,7 @@ RUN chmod -R 777 /usr/local/lib/ /usr/local/bin/ /usr/local/share/
 # Create a shared home directory
 # This helps anonymous users have a home
 ENV HOME=/home/shared
-RUN mkdir -p $HOME
+RUN mkdir -p $HOME $HOME/.cache/pip
 RUN chmod -R 777 $HOME
 
 # Add binaries to image
