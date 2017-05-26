@@ -8,7 +8,7 @@ ENV DB_HOST="db"
 ENV DB_PORT="5432"
 
 # Debug tools
-RUN pip3 install ipdb bpython
+RUN pip3 install ipdb bpython flake8
 
 # Supporting libraries for python modules
 RUN apt-get update && apt-get install --yes libpq-dev build-essential
