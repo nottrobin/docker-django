@@ -28,8 +28,8 @@ fi
 
 # Run manage.py commands
 if [ -n "$run_command" ]; then
-    # If we have arguments, pass them to manage.py
-    python3 manage.py $run_command
+    # If we have a command to run, run it directly
+    $run_command
 else
     # By default, prepare database and run server
     if echo "exec(open('/db-check').read())" | python3 manage.py shell -i bpython 2> /tmp/dberror; then
