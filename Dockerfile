@@ -18,7 +18,7 @@ ENV REQUIREMENTS_PATH="requirements.txt"
 ENV REQUIREMENTS_HASH="/usr/local/lib/python3.6/site-packages/requirements.md5"
 
 # Ensure all users can create dependencies
-RUN chmod -R 777 /usr/local/lib/ /usr/local/bin/ /usr/local/share/
+RUN chmod -R 777 /usr/local/
 
 # Create a shared home directory
 # This helps anonymous users have a home
