@@ -1,39 +1,24 @@
-# canonicalwebteam/django docker image
+# canonicalwebteam/python3 docker image
 
-A docker image for running Django projects in local development, where they correspond to the expected format.
+A Docker image for running Python3 projects in local development. The image will detect and install dependencies automatically.
 
 ## Project format
 
-This image is meant for running Django projects which:
-
-- Define all required dependencies in `./requirements.txt`
-- Are compatible with Python 3
+This image is meant for running Python3 projects whichkeep their required dependencies in `./requirements.txt`.
 
 ## Usage
 
-By default, the image will install any requirements from `/app/requirements.txt` then run the standard Django development server from `/app` on the `$PORT` port (default `8000`) inside the container.
+The image will install any requirements from `./requirements.txt`, or update dependencies if they've changed since last run, and then run the provided commands.
 
 ### Basic usage
 
-For the most basic usage, run the following from your application directory:
+For the most basic usage, where `app.py` is the Python3 application you want to run:
 
 ``` bash
-$ docker run -ti --volume `pwd`:`pwd` --workdir `pwd` --publish 8000:8000 canonicalwebteam/django
+docker run --tty --interactive --volume `pwd`:`pwd` --workdir `pwd` canonicalwebteam/python3 app.py
 ```
 
-This will mount your application directory inside the container, install requirements from `/app/requirements.txt`, run the Django development server with `manage.py runserver 0.0.0.0:8000` and link that port in the container to port `8000` on the host machine.
-
-All being well, your application should now be available at <localhost:8000>.
-
-### Other manage.py commands
-
-Any arguments after the `canonicalwebteam/django` will be passed to `manage.py`. So, for example, adding `shell` will run a Django shell:
-
-``` bash
-$ docker run -ti --volume `pwd`:`pwd` --workdir `pwd` canonicalwebteam/django shell
-```
-
-Or passing `help` will display the help for `manage.py`.
+This will mount your application directory inside the container, install requirements from `./requirements.txt`, and then run `app.py`.
 
 ### Saving dependencies
 
@@ -45,38 +30,14 @@ $ docker run -ti \
          --workdir `pwd`  \
          --volume dependencies:/usr/local/lib/python3.6/site-packages  \
          --publish 8000:8000  \
-         canonicalwebteam/django
+         canonicalwebteam/python3 app.py
 ```
 
 The first time you run the above command it will save the python packages into the a data volume called `dependencies`. On subsequent runs it will load the same data volume, and only re-install requirements if the `requirements` directory has been updated.
 
-### docker-compose.yml
+### Changing the path to your requirements file
 
-[docker-compose](https://docs.docker.com/compose/) provides a standard way of
-defining docker services for a project within a `docker-compose.yml` file.
-
-A standard `docker-compose.yml` for the `django` image:
-
-``` yaml
-# docker-compose.yml
-
-webapp:
-    image: canonicalwebteam/django::vx.x.x
-    volumes:
-      - "dependencies:/usr/local/lib/python3.6/site-packages"
-      - .:/app
-    working_dir: /app
-    ports:
-      - "8000:8000"
-```
-
-### Customisation
-
-The container can be customised by overriding any of the following environment variables:
-
-- `REQUIREMENTS_PATH`: The path to the requirements file from which to install dependencies (default: `requirements.txt`)
-
-E.g., to run a Django app with a requirements file at `dev-requirements.txt`:
+You can use the `REQUIREMENTS_PATH` environment variable to specify a different location for `requirements.txt`. E.g., to run an app with a requirements file at `dev-requirements.txt`:
 
 ``` bash
 docker run -ti  \
@@ -85,6 +46,5 @@ docker run -ti  \
        --workdir `pwd`  \
        --volume dependencies:/usr/local/lib/python3.6/site-packages  \
        --publish 8000:8000  \
-       canonicalwebteam/django
+       canonicalwebteam/python3 app.py
 ```
-
